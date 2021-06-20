@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Book Instances List</h1>
+  {% if bookinstance_list %}
+  <ul>
+    {% for bookinstance in bookinstance_list %}
+      <li>
+          <p><a href="{{ bookinstance.book.get_absolute_url }}">{{ bookinstance.book.title }}</a> ({{bookinstance.book.author}}), Imprint: {{ bookinstance.imprint }} </p>
+          <p> Status: <span class="{% if bookinstance.status == 'a' %}text-success{% elif bookinstance.status == 'm' %}text-danger{% else %}text-warning{% endif %}">
+          {{ bookinstance.get_status_display }}</span> {% if bookinstance.status == 'o' %}Due back: {{ bookinstance.due_back }} {% endif %}
+          {% if user.is_staff %} - <a href="{% url 'book-instance-update' bookinstance.id %}">Update</a>
+           - <a href="{% url 'book-instance-delete' bookinstance.id %}">Delete</a>{% endif %}</p>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no book instances</p>
+  {% endif %}
+{% endblock %}
